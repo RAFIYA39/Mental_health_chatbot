@@ -3,3 +3,7 @@ backend/temp_audio.wav
 backend/wav2vec2_checkpoints/
 .rasa/cache/
 models/
+backend/tmp/
+backend/temp_audio.webm
+backend/converted_audio.wav
+actions/__pycache__/
