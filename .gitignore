@@ -2,3 +2,4 @@ rasa_env/
 backend/temp_audio.wav
 backend/wav2vec2_checkpoints/
 .rasa/cache/
+models/
