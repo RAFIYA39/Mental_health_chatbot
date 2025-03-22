@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCare Chatbot</title>
+    <style>
+        :root {
+            --bg-color: #f0f5f9;
+            --text-color: #333;
+            --chat-bg: #ffffff;
+            --btn-bg: #4CAF50;
+            --btn-text: #ffffff;
+        }
+        body.dark-mode {
+            --bg-color: #1e1e1e;
+            --text-color: #ffffff;
+            --chat-bg: #2a2a2a;
+            --btn-bg: #4a90e2;
+            --btn-text: #ffffff;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+        #chatbox {
+            width: 400px;
+            height: 500px;
+            border-radius: 10px;
+            background: var(--chat-bg);
+            border: 1px solid #ccc;
+            overflow-y: scroll;
+            padding: 10px;
+            margin: auto;
+            text-align: left;
+            transition: background 0.5s ease;
+        }
+        input, button {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+        input {
+            width: 70%;
+        }
+        button {
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #367c39;
+        }
+        .toggle-mode {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+        .bot-message {
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <button class="toggle-mode" onclick="toggleMode()">🌙</button>
+    <h1>Welcome to MindCare Chatbot</h1>
+    <div id="chatbox"></div>
+    <input id="user_input" type="text" placeholder="Type your message...">
+    <button id="sendButton">Send</button>
+    <br><br>
+    <button id="startRecording">🎤 Start Recording</button>
+    <button id="stopRecording" disabled>⏹ Stop Recording</button>
+    <button id="toggleCamera">📷 Toggle Camera</button>
+    <br><br>
+    <img id="videoFeed" src="" alt="Webcam Stream" style="display: none; width: 300px; height: 250px; border-radius: 10px;">  
+    <script>
+        function sendMessage() {
+            let userMessage = document.getElementById("user_input").value;
+            if (!userMessage) return;
+            document.getElementById("chatbox").innerHTML += `<p><strong>You:</strong> ${userMessage}</p>`;
+            document.getElementById("user_input").value = "";
+            fetch("/chat", {
+                method: "POST",
+                body: JSON.stringify({ message: userMessage }),
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                let botMessage = document.createElement("p");
+                botMessage.classList.add("bot-message");
+                botMessage.innerHTML = `<strong>Bot:</strong> ${data.response}`;
+                document.getElementById("chatbox").appendChild(botMessage);
+            })
+            .catch(error => console.error("Error sending text to chatbot:", error));
+        }
+        document.getElementById("sendButton").addEventListener("click", sendMessage);
+        
+        // 🎤 Speech-to-Text (STT) Recording
+        let mediaRecorder;
+        let audioChunks = [];
+
+        document.getElementById("startRecording").addEventListener("click", function () {
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+                audioChunks = [];
+
+                mediaRecorder.addEventListener("dataavailable", event => {
+                    audioChunks.push(event.data);
+                });
+
+                document.getElementById("startRecording").disabled = true;
+                document.getElementById("stopRecording").disabled = false;
+                console.log("Recording started...");
+            }).catch(error => {
+                console.error("Error accessing microphone:", error);
+            });
+        });
+
+        document.getElementById("stopRecording").addEventListener("click", function () {
+            mediaRecorder.stop();
+            console.log("Recording stopped...");
+
+            document.getElementById("startRecording").disabled = false;
+            document.getElementById("stopRecording").disabled = true;
+
+            mediaRecorder.addEventListener("stop", () => {
+                const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+                console.log("Audio Blob:", audioBlob);
+
+                sendAudio(audioBlob);  // Send recorded audio to Flask
+            });
+        });
+
+        // Function to send audio to backend
+        function sendAudio(audioBlob) {
+            const formData = new FormData();
+            formData.append("file", audioBlob, "audio.wav");
+
+            fetch("/process_audio", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Response from server:", data);
+                let transcribedText = data.transcription;
+                document.getElementById("chatbox").innerHTML += `<p><strong>You (Spoken):</strong> ${transcribedText}</p>`;
+                sendTextToChatbot(transcribedText);
+            })
+            .catch(error => console.error("Error processing audio:", error));
+        }
+
+        // Function to send transcribed text to chatbot
+        function sendTextToChatbot(text) {
+            fetch("/chat", {
+                method: "POST",
+                body: JSON.stringify({ message: text }),
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Chatbot Response:", data.response);
+                document.getElementById("chatbox").innerHTML += `<p><strong>Bot:</strong> ${data.response}</p>`;
+            })
+            .catch(error => console.error("Error sending text to chatbot:", error));
+        }
+
+        let cameraOn = false;
+
+        document.getElementById("toggleCamera").addEventListener("click", function () {
+            if (!cameraOn) {
+                let confirmation = confirm("Are you sure you want to switch on the camera?");
+                if (!confirmation) return;
+            }
+
+            cameraOn = !cameraOn;
+            
+            fetch("/toggle_camera", {
+                method: "POST",
+                body: JSON.stringify({ camera_on: cameraOn }),
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (cameraOn) {
+                    document.getElementById("videoFeed").src = "/video_feed";
+                    document.getElementById("videoFeed").style.display = "block";
+                } else {
+                    document.getElementById("videoFeed").style.display = "none";
+                    document.getElementById("videoFeed").src = "";
+                }
+            })
+            .catch(error => console.error("Error toggling camera:", error));
+        });
+
+
+        function toggleMode() {
+            document.body.classList.toggle("dark-mode");
+            let modeBtn = document.querySelector(".toggle-mode");
+            modeBtn.textContent = document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
+        }
+    </script>
+</body>
+</html>

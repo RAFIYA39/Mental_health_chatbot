@@ -1,0 +1,405 @@
+stories:
+- story: Greet user
+  steps:
+  - intent: greeting
+  - action: utter_greeting
+
+- story: Morning greeting
+  steps:
+  - intent: morning
+  - action: utter_morning
+
+- story: Afternoon greeting
+  steps:
+  - intent: afternoon
+  - action: utter_afternoon
+
+- story: Evening greeting
+  steps:
+  - intent: evening
+  - action: utter_evening
+
+- story: Night farewell
+  steps:
+  - intent: night
+  - action: utter_night
+
+- story: User says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: User thanks the bot
+  steps:
+  - intent: thanks
+  - action: utter_thanks
+
+- story: User asks about the bot
+  steps:
+  - intent: about
+  - action: utter_about
+
+- story: User asks what the bot can do
+  steps:
+  - intent: skill
+  - action: utter_skill
+
+- story: User asks about bot's creation
+  steps:
+  - intent: creation
+  - action: utter_creation
+
+- story: User tells their name
+  steps:
+  - intent: name
+  - action: utter_name
+
+- story: User asks for help
+  steps:
+  - intent: help
+  - action: utter_help
+
+- story: User feels sad
+  steps:
+  - intent: sad
+  - action: utter_sad
+
+- story: User feels stressed
+  steps:
+  - intent: stressed
+  - action: utter_stressed
+
+- story: User feels worthless
+  steps:
+  - intent: worthless
+  - action: utter_worthless
+
+- story: User feels depressed
+  steps:
+  - intent: depressed
+  - action: utter_depressed
+
+- story: User is happy
+  steps:
+  - intent: happy
+  - action: utter_happy
+
+- story: User is anxious
+  steps:
+  - intent: anxious
+  - action: utter_anxious
+
+- story: User is scared
+  steps:
+  - intent: scared
+  - action: utter_scared
+
+- story: User talks about death
+  steps:
+  - intent: death
+  - action: utter_death
+
+- story: User mentions suicide
+  steps:
+  - intent: suicide
+  - action: utter_suicide
+
+- story: User says they hate themselves
+  steps:
+  - intent: hate-me
+  - action: utter_hate-me
+
+- story: User says they hate the bot
+  steps:
+  - intent: hate-you
+  - action: utter_hate-you
+
+- story: User asks for a joke
+  steps:
+  - intent: jokes
+  - action: utter_jokes
+
+- story: User asks for meditation
+  steps:
+  - intent: meditation
+  - action: utter_meditation
+
+- story: User asks about mental health
+  steps:
+  - intent: learn-mental-health
+  - action: utter_learn-mental-health
+
+- story: User asks for mental health fact
+  steps:
+  - intent: mental-health-fact
+  - action: utter_mental-health-fact
+
+- story: User asks a question
+  steps:
+  - intent: ask
+  - action: utter_ask
+
+- story: User faces a problem
+  steps:
+  - intent: problem
+  - action: utter_problem
+
+- story: User agrees to a suggestion
+  steps:
+  - intent: user-agree
+  - action: utter_user-agree
+
+- story: User finds bot useful
+  steps:
+  - intent: pandora-useful
+  - action: utter_pandora-useful
+
+- story: User seeks advice
+  steps:
+  - intent: user-advice
+  - action: utter_user-advice
+
+- story: User wants to learn more
+  steps:
+  - intent: learn-more
+  - action: utter_learn-more
+
+- story: User asks for location
+  steps:
+  - intent: location
+  - action: utter_location
+
+- story: User has no response
+  steps:
+  - intent: no-response
+  - action: utter_no-response
+
+- story: User says something neutral
+  steps:
+  - intent: neutral-response
+  - action: utter_neutral-response
+
+- story: Default 
+  steps:
+  - intent: default
+  - action: utter_default
+
+- story: User is not talking
+  steps:
+    - intent: not-talking
+    - action: utter_not-talking
+
+- story: User talks about sleep issues
+  steps:
+    - intent: sleep
+    - action: utter_sleep
+
+- story: User expresses frustration in understanding
+  steps:
+    - intent: understand
+    - action: utter_understand
+
+- story: User asks for a fact
+  steps:
+    - intent: fact-1
+    - action: utter_fact-1
+
+- story: User wants another fact
+  steps:
+    - intent: fact-2
+    - action: utter_fact-2
+
+- story: User asks for fact 3
+  steps:
+    - intent: fact-3
+    - action: utter_fact-3
+
+
+- story: User asks for fact 5
+  steps:
+    - intent: fact-5
+    - action: utter_fact-5
+
+- story: User asks for fact 6
+  steps:
+    - intent: fact-6
+    - action: utter_fact-6
+
+- story: User asks for fact 7
+  steps:
+    - intent: fact-7
+    - action: utter_fact-7
+
+- story: User asks for fact 8
+  steps:
+    - intent: fact-8
+    - action: utter_fact-8
+
+- story: User asks for fact 9
+  steps:
+    - intent: fact-9
+    - action: utter_fact-9
+
+- story: User asks for fact 10
+  steps:
+    - intent: fact-10
+    - action: utter_fact-10
+
+- story: User asks for a fact 11
+  steps:
+    - intent: fact-11
+    - action: utter_fact-11
+
+- story: User wants another fact 12
+  steps:
+    - intent: fact-12
+    - action: utter_fact-12
+
+- story: User asks for fact 13
+  steps:
+    - intent: fact-13
+    - action: utter_fact-13
+
+- story: User asks for fact 14
+  steps:
+    - intent: fact-14
+    - action: utter_fact-14
+
+- story: User asks for fact 15
+  steps:
+    - intent: fact-15
+    - action: utter_fact-15
+
+- story: User asks for fact 16
+  steps:
+    - intent: fact-16
+    - action: utter_fact-16
+
+- story: User asks for fact 17
+  steps:
+    - intent: fact-17
+    - action: utter_fact-17
+
+- story: User asks for fact 18
+  steps:
+    - intent: fact-18
+    - action: utter_fact-18
+
+- story: User asks for fact 19
+  steps:
+    - intent: fact-19
+    - action: utter_fact-19
+
+
+- story: User asks for fact 20
+  steps:
+    - intent: fact-20
+    - action: utter_fact-20
+
+- story: User asks for a fact 21
+  steps:
+    - intent: fact-21
+    - action: utter_fact-21
+
+- story: User wants another fact 22
+  steps:
+    - intent: fact-22
+    - action: utter_fact-22
+
+- story: User asks for fact 23
+  steps:
+    - intent: fact-23
+    - action: utter_fact-23
+
+- story: User asks for fact 24
+  steps:
+    - intent: fact-24
+    - action: utter_fact-24
+
+- story: User asks for fact 25
+  steps:
+    - intent: fact-25
+    - action: utter_fact-25
+
+- story: User asks for fact 26
+  steps:
+    - intent: fact-26
+    - action: utter_fact-26
+
+- story: User asks for fact 27
+  steps:
+    - intent: fact-27
+    - action: utter_fact-27
+
+- story: User asks for fact 28
+  steps:
+    - intent: fact-28
+    - action: utter_fact-28
+
+- story: User asks for fact 29
+  steps:
+    - intent: fact-29
+    - action: utter_fact-29
+
+
+- story: User asks for fact 30
+  steps:
+    - intent: fact-30
+    - action: utter_fact-30
+
+- story: User asks for a fact 31
+  steps:
+    - intent: fact-31
+    - action: utter_fact-31
+
+- story: User wants another fact 32
+  steps:
+    - intent: fact-32
+    - action: utter_fact-32
+
+- story: User talks casually
+  steps:
+  - intent: casual
+  - action: utter_casual
+
+- story: User is done
+  steps:
+  - intent: done
+  - action: utter_done
+
+- story: User talks about friends
+  steps:
+  - intent: friends
+  - action: utter_friends
+
+- story: User talks no-approach
+  steps:
+  - intent: no-approach
+  - action: utter_no-approach
+
+- story: Bot makes a mistake
+  steps:
+  - intent: wrong
+  - action: utter_wrong
+
+- story: User says bot is repeating
+  steps:
+  - intent: repeat
+  - action: utter_repeat
+
+- story: User asks something else
+  steps:
+  - intent: something-else
+  - action: utter_something-else
+
+- story: User meditates
+  steps:
+  - intent: user-meditation
+  - action: utter_user-meditation
+
+- story: User calls bot stupid
+  steps:
+  - intent: stupid
+  - action: utter_stupid
+
+version: "3.1"

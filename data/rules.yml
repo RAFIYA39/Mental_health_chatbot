@@ -1,0 +1,23 @@
+version: "3.1"
+
+rules:
+  - rule: Greet the user
+    steps:
+      - intent: greeting
+      - action: utter_greeting
+
+  - rule: Say goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
+
+  - rule: Thank the user
+    steps:
+      - intent: thanks
+      - action: utter_thanks
+
+  - rule: Default fallback to AI-generated response
+    steps:
+      - intent: nlu_fallback
+      - action: action_generate_empathetic_response
+
