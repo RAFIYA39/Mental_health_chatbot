@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mental Health Chatbot</title>
+    <title>MIND CARE BOT</title>
     <link rel="stylesheet" href="hm_styles.css">
-    <script src="hm_scripts.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 </head>
-<body>
+<body onload="checkLoginStatus()">
+
     <header>
         <div class="container">
-            <h1>Mental Health Chatbot</h1>
+            <h1>MIND CARE BOT</h1>
             <nav>
-                <ul>
+                <ul class="nav-list">
                     <li><a href="#"><i class="fas fa-home"></i></a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
+                    <li id="login-option"><a href="login.html">Login</a></li>
                 </ul>
             </nav>
         </div>
@@ -23,8 +25,8 @@
 
     <section class="hero">
         <div class="container">
-            <h2 class="dark-text">"Your thoughts matter, and so do you." 💙</h2>
-            <p class="dark-text">We are here to listen. Start a conversation today.</p>
+            <h2>"Your thoughts matter, and so do you." 💙</h2>
+            <p>We are here to listen. Start a conversation today.</p>
         </div>
     </section>
 
@@ -33,7 +35,7 @@
             <div class="feature">
                 <h3>Talk to the Chatbot</h3>
                 <p>Express yourself freely. Our AI-powered chatbot is here for you.</p>
-                <a href="chat.html" class="btn">Start Chat</a>
+                
             </div>
             <div class="feature">
                 <h3>Mood Tracking</h3>
@@ -52,5 +54,7 @@
             <p>&copy; 2024 Mental Health Chatbot. You are not alone. 💙</p>
         </div>
     </footer>
+
+    <script src="hm_scripts.js"></script>
 </body>
 </html>

@@ -20,30 +20,43 @@ body {
 
 .login-box {
     background: white;
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
-    width: 350px;
+    width: 300px; /* Reduced width */
     text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+h2, h3 {
+    margin: 5px 0; /* Reduce spacing */
+    color: #333;
+    font-size: 1em; /* Reduced font size */
 }
 
 input {
     width: 90%;
-    padding: 10px;
-    margin: 8px 0;
+    padding: 8px; /* Slightly smaller padding */
+    margin: 6px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
 button {
     width: 100%;
-    padding: 10px;
+    padding: 8px;
     background: #007bff;
     border: none;
     color: white;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 0.5em;
 }
 
 button:hover {
     background: #0056b3;
+}
+
+.account-message {
+    font-size: 0.5em; /* Standard font size */
+    margin-top: 10px;
+    color: #707070; /* Softer grey color */
 }

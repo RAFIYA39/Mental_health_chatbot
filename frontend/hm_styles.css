@@ -31,6 +31,23 @@ header {
     font-weight: bold;
 }
 
+/* Navigation List */
+.nav-list {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-list li {
+    margin: 0 15px;
+}
+
+.nav-list a {
+    text-decoration: none;
+    color: white;
+}
+
 /* Features Section */
 .features {
     display: flex;
