@@ -18,9 +18,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 const status = document.getElementById("login-status");
 
                 if (data.success) {
+                    localStorage.setItem("username", username); 
                     status.textContent = "Login successful!";
                     status.style.color = "green";
-                    setTimeout(() => window.location.href = "home.html", 1000);
+                    setTimeout(() => window.location.href = "/homepage", 1000);
                 } else {
                     status.textContent = data.message || "Invalid username or password.";
                     status.style.color = "red";

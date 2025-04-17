@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>MIND CARE BOT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/home.css" />
+</head>
+<body>
+    <!-- Logout button -->
+    <div class="logout-container">
+        <a href="/firstpage" class="logout-btn">Logout</a>
+    </div>
+
+    <h1 class="main-heading">🌿 Mind Care Bot</h1>
+    
+    <div class="container">
+        <div class="box">
+            <h3>💬 Talk to the Chatbot</h3>
+            <p>Express your thoughts. Your AI companion is here to listen and help.</p>
+            <a href="/chatbot" class="btn">Start Chat</a>
+        </div>
+
+        <div class="box">
+            <h3>📈 Mood Tracking</h3>
+            <p>Monitor your emotions over time. Reflect and grow.</p>
+            <a href="/progress" class="btn">Mood Tracker</a>
+        </div>
+
+        <div class="box">
+            <h3>🧘 Self-Care Strategies</h3>
+            <p>Practice mindfulness and learn healthy coping mechanisms.</p>
+            <a href="/selfcare" class="btn">Self Help</a>
+        </div>
+    </div>
+
+    <!-- Prevent back navigation -->
+    <script>
+        // Clear history state to prevent going back
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+        };
+    </script>
+</body>
+</html>

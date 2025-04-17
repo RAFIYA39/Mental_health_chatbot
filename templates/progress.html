@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mood Progress</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h2>Mood Distribution</h2>
+    <h3 id="moodSummary"></h3>
+    <p id="moodMessage" style="font-style: italic;"></p> <!-- 💡 Motivational message -->
+
+    <canvas id="moodBarChart" width="600" height="400"></canvas>
+
+    <script>
+        const username = localStorage.getItem("username") || "guest";
+
+        fetch(`/get_mood_data?username=${username}`)
+            .then(response => response.json())
+            .then(result => {
+                const data = result.moods;
+                const summary = result.summary;
+
+                const maxMood = Object.keys(summary).reduce((a, b) => summary[a] > summary[b] ? a : b);
+
+                // 🌟 Summary Text
+                const moodMessages = {
+                    positive: "You've been feeling mostly positive this week 😊",
+                    neutral: "You’ve been mostly neutral – maybe it’s been a calm week 😌",
+                    negative: "Looks like you've been going through a tough week 😔"
+                };
+                document.getElementById("moodSummary").textContent = moodMessages[maxMood];
+
+                // 💬 Motivational / supportive messages
+                const motivationalMessages = {
+                    positive: "Keep spreading the good vibes! 🌈 You're doing amazing.",
+                    neutral: "Balance is beautiful. Keep going one step at a time 🌿",
+                    negative: "Hang in there 💪 You're stronger than you think. Brighter days are ahead!"
+                };
+                document.getElementById("moodMessage").textContent = motivationalMessages[maxMood];
+
+                // 📊 Bar Chart
+                const ctxBar = document.getElementById('moodBarChart').getContext('2d');
+                new Chart(ctxBar, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Positive', 'Neutral', 'Negative'],
+                        datasets: [{
+                            label: 'Mood Frequency',
+                            data: [summary.positive, summary.neutral, summary.negative],
+                            backgroundColor: ['#4CAF50', '#FFC107', '#F44336']
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Entries'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            });
+    </script>
+</body>
+</html>

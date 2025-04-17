@@ -3,7 +3,7 @@ body {
     margin: 0;
     padding: 0;
     text-align: center;
-    background-color: #6a85b6;
+    background-color: #ffffff;
 }
 
 #welcome-screen {
@@ -13,7 +13,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: rgb(7, 0, 0);
     font-size: 2em;
     font-weight: bold;
 }

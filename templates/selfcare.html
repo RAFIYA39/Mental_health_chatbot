@@ -1,0 +1,236 @@
+<!-- templates/self_care.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Self Care Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-blue-100 to-purple-200 min-h-screen p-6 font-sans">
+    <header class="flex justify-between items-center mb-6">
+        <h1 class="text-4xl font-bold text-indigo-700">Self Care Hub</h1>
+        <a href="/homepage" class="text-white bg-red-500 px-4 py-2 rounded hover:bg-red-600">Back to Home</a>
+    </header>
+
+    <!-- Motivational Videos -->
+    <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Motivational & Yoga Videos</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <iframe class="w-full aspect-video rounded" src="https://www.youtube.com/embed/ZToicYcHIOU" allowfullscreen></iframe>
+            <iframe class="w-full aspect-video rounded" src="https://www.youtube.com/embed/4pLUleLdwY4" allowfullscreen></iframe>
+            <iframe class="w-full aspect-video rounded" src="https://www.youtube.com/embed/COp7BR_Dvps" allowfullscreen></iframe>
+            <iframe class="w-full aspect-video rounded" src="https://www.youtube.com/embed/rkZl2gsLUp4" allowfullscreen></iframe>
+            <iframe class="w-full aspect-video rounded" src="https://www.youtube.com/embed/WWloIAQpMcQ" allowfullscreen></iframe>
+            <iframe class="w-full aspect-video rounded" src="https://www.youtube.com/embed/7qWnakYMQDM" allowfullscreen></iframe>
+        </div>
+    </section>
+
+    <!-- Mental Health Quiz (Basic placeholder) -->
+    <div class="max-w-2xl mx-auto mt-12 p-6 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-4 text-center text-gray-800">🧠 Mental Health Check-In</h2>
+        <form id="quizForm" class="space-y-6">
+            <div>
+                <p class="font-semibold mb-2">1. How often have you felt down, depressed, or hopeless in the past week?</p>
+                <select class="w-full p-2 border rounded" name="q1">
+                    <option value="0">Not at all</option>
+                    <option value="1">Several days</option>
+                    <option value="2">More than half the days</option>
+                    <option value="3">Nearly every day</option>
+                </select>
+            </div>
+            <div>
+                <p class="font-semibold mb-2">2. How often have you felt anxious or on edge?</p>
+                <select class="w-full p-2 border rounded" name="q2">
+                    <option value="0">Not at all</option>
+                    <option value="1">Several days</option>
+                    <option value="2">More than half the days</option>
+                    <option value="3">Nearly every day</option>
+                </select>
+            </div>
+            <div>
+                <p class="font-semibold mb-2">3. How well are you sleeping?</p>
+                <select class="w-full p-2 border rounded" name="q3">
+                    <option value="0">Very well</option>
+                    <option value="1">Okay</option>
+                    <option value="2">Restless</option>
+                    <option value="3">Barely sleep</option>
+                </select>
+            </div>
+            <div>
+                <p class="font-semibold mb-2">4. How often do you feel tired or have little energy?</p>
+                <select class="w-full p-2 border rounded" name="q4">
+                <option value="0">Not at all</option>
+                <option value="1">Several days</option>
+                <option value="2">More than half the days</option>
+                <option value="3">Nearly every day</option>
+                </select>
+            </div>
+            <div>
+                <p class="font-semibold mb-2">5. How interested are you in doing things you usually enjoy?</p>
+                <select class="w-full p-2 border rounded" name="q5">
+                <option value="0">Very interested</option>
+                <option value="1">Somewhat interested</option>
+                <option value="2">Barely interested</option>
+                <option value="3">Not interested at all</option>
+                </select>
+
+            </div>
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Submit</button>
+        </form>
+    
+        <div id="quizResult" class="mt-6 hidden bg-blue-100 border border-blue-400 text-blue-700 p-4 rounded">
+            <!-- Result will appear here -->
+        </div>
+    </div>
+    
+
+    <!-- Poems and Stories -->
+    <section class="bg-gray-50 py-10">
+        <div class="max-w-6xl mx-auto px-4">
+          <h2 class="text-3xl font-bold text-center text-blue-800 mb-6">Poems & Stories for Your Soul ✨</h2>
+      
+          <!-- Filter Dropdown -->
+          <div class="flex justify-center mb-8">
+            <select onchange="filterContent(this.value)" class="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300">
+              <option value="all">Show All</option>
+              <option value="poem">Poems</option>
+              <option value="story">Stories</option>
+            </select>
+          </div>
+      
+          <!-- Content Cards -->
+          <div id="contentContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+            <!-- Poem 1 -->
+            <div class="poem bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+              <h3 class="text-xl font-semibold text-purple-700 mb-2">Breathe</h3>
+              <p class="text-gray-600 italic">
+                Inhale courage, exhale fear,<br>
+                Every breath brings you near,<br>
+                To calm, to strength, to light inside,<br>
+                Let peace in, and let it guide.
+              </p>
+            </div>
+      
+            <!-- Story 1 -->
+            <div class="story bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+              <h3 class="text-xl font-semibold text-green-700 mb-2">The Kind Note</h3>
+              <p class="text-gray-600">
+                A student found a sticky note on her locker: "You're doing amazing!" That day, she smiled for the first time in weeks. One kind word can rewrite someone’s story.
+              </p>
+            </div>
+      
+            <!-- Poem 2 -->
+            <div class="poem bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+              <h3 class="text-xl font-semibold text-pink-600 mb-2">Sunrise</h3>
+              <p class="text-gray-600 italic">
+                Even the darkest night will fade,<br>
+                And light will touch the earth again.<br>
+                Hold on, be still, be brave—<br>
+                A new day begins in pain's end.
+              </p>
+            </div>
+      
+            <!-- Poem 3 -->
+            <div class="poem bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+              <h3 class="text-xl font-semibold text-purple-600 mb-2">Keep Walking</h3>
+              <p class="text-gray-600 italic">
+                When the night is long and your heart feels small...<br>
+                You're not alone in this hard place.<br>
+                The journey’s tough, but you are too.<br>
+                <strong>Keep walking—life believes in you.</strong>
+              </p>
+            </div>
+      
+            <!-- Poem 4 -->
+            <div class="poem bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+              <h3 class="text-xl font-semibold text-pink-600 mb-2">You Are the Morning</h3>
+              <p class="text-gray-600 italic">
+                You are not the storm.<br>
+                You are the one who survived it.<br>
+                Not the dark—<br>
+                but the <strong>dawn that follows.</strong>
+              </p>
+            </div>
+      
+            <!-- Story 2: With Read More -->
+            <div class="story bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+              <h3 class="text-xl font-semibold text-indigo-700 mb-2">The Lamp in the Storm</h3>
+              <p id="lampStory" class="text-gray-600 line-clamp-4 overflow-hidden transition-all duration-300">
+                There once was a girl named Meera who carried a small, flickering lantern through a raging storm...<br>
+                People shouted, “It’s hopeless!” But she said, “Someone out there is still lost.”<br>
+                The wind howled. Her hands trembled. But she found someone under a tree. “I found you,” she whispered.<br>
+                The lantern was dim, but it had done its job.<br>
+                <strong>Even a tiny glow can lead someone— even yourself—home.</strong>
+              </p>
+              <button onclick="toggleReadMore('lampStory', this)" class="text-blue-600 hover:underline mt-2">Read More</button>
+            </div>
+      
+            <!-- Story 3 -->
+            <div class="story bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+              <h3 class="text-xl font-semibold text-green-700 mb-2">The Broken Pot</h3>
+              <p class="text-gray-600">
+                A water bearer carried two pots. One was cracked. It arrived only half full. <br>
+                Ashamed, it said, “I’m sorry.” The bearer smiled, “Look behind you.”<br>
+                Flowers bloomed—only on the side watered by the cracked pot.<br>
+                <strong>You thought you were broken... but you were giving life all along.</strong>
+              </p>
+            </div>
+      
+          </div>
+        </div>
+      </section>
+      
+    <script>
+        const form = document.getElementById('quizForm');
+        const resultDiv = document.getElementById('quizResult');
+    
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+    
+            const data = new FormData(form);
+            let score = 0;
+    
+            for (let value of data.values()) {
+                score += parseInt(value);
+            }
+    
+            let message = "";
+            if (score <= 3) {
+                message = "😊 You're doing well! Keep maintaining a positive routine.";
+            } else if (score <= 6) {
+                message = "😌 You seem to be going through mild stress. Take short breaks and try some breathing exercises.";
+            } else {
+                message = "💙 It looks like you’re facing some challenges. You’re not alone. Take care of yourself, and don’t hesitate to talk to someone you trust.";
+            }
+    
+            resultDiv.textContent = message;
+            resultDiv.classList.remove("hidden");
+        });
+        
+        function filterContent(type) {
+    const allItems = document.querySelectorAll('.poem, .story');
+    allItems.forEach(el => {
+      if (type === 'all') {
+        el.style.display = 'block';
+      } else {
+        el.style.display = el.classList.contains(type) ? 'block' : 'none';
+      }
+    });
+  }
+
+  function toggleReadMore(id, btn) {
+    const content = document.getElementById(id);
+    content.classList.toggle('line-clamp-4');
+    btn.textContent = content.classList.contains('line-clamp-4') ? 'Read More' : 'Read Less';
+  }
+
+  // Show all on load
+  window.onload = () => {
+    filterContent('all');
+  };
+
+
+    </script>
+</body>
+</html>

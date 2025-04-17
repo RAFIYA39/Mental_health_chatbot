@@ -29,12 +29,12 @@
             transition: background 0.5s ease, color 0.5s ease;
         }
         #chatbox {
-            width: 400px;
+            width: 1000px;
             height: 500px;
             border-radius: 10px;
             background: var(--chat-bg);
             border: 1px solid #ccc;
-            overflow-y: scroll;
+            overflow-y: auto;
             padding: 10px;
             margin: auto;
             text-align: left;
@@ -87,33 +87,50 @@
     <button id="toggleCamera">📷 Toggle Camera</button>
     <br><br>
     <img id="videoFeed" src="" alt="Webcam Stream" style="display: none; width: 300px; height: 250px; border-radius: 10px;">  
+
     <script>
-        function sendMessage() {
-            let userMessage = document.getElementById("user_input").value;
-            if (!userMessage) return;
-            document.getElementById("chatbox").innerHTML += `<p><strong>You:</strong> ${userMessage}</p>`;
-            document.getElementById("user_input").value = "";
-            fetch("/chat", {
-                method: "POST",
-                body: JSON.stringify({ message: userMessage }),
-                headers: { "Content-Type": "application/json" }
-            })
-            .then(response => response.json())
-            .then(data => {
-                let botMessage = document.createElement("p");
-                botMessage.classList.add("bot-message");
-                botMessage.innerHTML = `<strong>Bot:</strong> ${data.response}`;
-                document.getElementById("chatbox").appendChild(botMessage);
-            })
-            .catch(error => console.error("Error sending text to chatbot:", error));
+        const chatbox = document.getElementById("chatbox");
+        const username = localStorage.getItem("username") || "guest";
+        function appendMessage(sender, message) {
+            const msgElement = document.createElement("p");
+            msgElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            if (sender === "Bot") msgElement.classList.add("bot-message");
+            chatbox.appendChild(msgElement);
+            chatbox.scrollTop = chatbox.scrollHeight;
         }
+
+        async function sendMessage() {
+            const input = document.getElementById("user_input");
+            const userMessage = input.value.trim();
+            if (!userMessage) return;
+
+            appendMessage("You", userMessage);
+            input.value = "";
+
+            try {
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username: username,message: userMessage })
+                });
+                const data = await response.json();
+                appendMessage("Bot", data.response || "Sorry, no response.");
+            } catch (error) {
+                console.error("Error sending text:", error);
+                appendMessage("Bot", "Error connecting to server.");
+            }
+        }
+
         document.getElementById("sendButton").addEventListener("click", sendMessage);
-        
-        // 🎤 Speech-to-Text (STT) Recording
+        document.getElementById("user_input").addEventListener("keypress", function (e) {
+            if (e.key === "Enter") sendMessage();
+        });
+
+        // 🎤 Speech-to-Text Recording
         let mediaRecorder;
         let audioChunks = [];
 
-        document.getElementById("startRecording").addEventListener("click", function () {
+        document.getElementById("startRecording").addEventListener("click", () => {
             navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
                 mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.start();
@@ -125,28 +142,22 @@
 
                 document.getElementById("startRecording").disabled = true;
                 document.getElementById("stopRecording").disabled = false;
-                console.log("Recording started...");
             }).catch(error => {
-                console.error("Error accessing microphone:", error);
+                console.error("Microphone error:", error);
             });
         });
 
-        document.getElementById("stopRecording").addEventListener("click", function () {
+        document.getElementById("stopRecording").addEventListener("click", () => {
             mediaRecorder.stop();
-            console.log("Recording stopped...");
-
             document.getElementById("startRecording").disabled = false;
             document.getElementById("stopRecording").disabled = true;
 
             mediaRecorder.addEventListener("stop", () => {
                 const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
-                console.log("Audio Blob:", audioBlob);
-
-                sendAudio(audioBlob);  // Send recorded audio to Flask
+                sendAudio(audioBlob);
             });
         });
 
-        // Function to send audio to backend
         function sendAudio(audioBlob) {
             const formData = new FormData();
             formData.append("file", audioBlob, "audio.wav");
@@ -155,64 +166,54 @@
                 method: "POST",
                 body: formData
             })
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
-                console.log("Response from server:", data);
-                let transcribedText = data.transcription;
-                document.getElementById("chatbox").innerHTML += `<p><strong>You (Spoken):</strong> ${transcribedText}</p>`;
-                sendTextToChatbot(transcribedText);
+                const transcribedText = data.transcription || "Unable to transcribe.";
+                appendMessage("You (Spoken)", transcribedText);
+                return fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({username: username,  message: transcribedText })
+                });
             })
-            .catch(error => console.error("Error processing audio:", error));
+            .then(res => res.json())
+            .then(data => {
+                appendMessage("Bot", data.response || "No response.");
+            })
+            .catch(error => {
+                console.error("Error processing audio:", error);
+                appendMessage("Bot", "Error with audio processing.");
+            });
         }
 
-        // Function to send transcribed text to chatbot
-        function sendTextToChatbot(text) {
-            fetch("/chat", {
-                method: "POST",
-                body: JSON.stringify({ message: text }),
-                headers: { "Content-Type": "application/json" }
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Chatbot Response:", data.response);
-                document.getElementById("chatbox").innerHTML += `<p><strong>Bot:</strong> ${data.response}</p>`;
-            })
-            .catch(error => console.error("Error sending text to chatbot:", error));
-        }
-
+        // 📷 Toggle Webcam
         let cameraOn = false;
-
-        document.getElementById("toggleCamera").addEventListener("click", function () {
-            if (!cameraOn) {
-                let confirmation = confirm("Are you sure you want to switch on the camera?");
-                if (!confirmation) return;
-            }
-
+        document.getElementById("toggleCamera").addEventListener("click", () => {
+            if (!cameraOn && !confirm("Turn on camera?")) return;
             cameraOn = !cameraOn;
-            
+
             fetch("/toggle_camera", {
                 method: "POST",
-                body: JSON.stringify({ camera_on: cameraOn }),
-                headers: { "Content-Type": "application/json" }
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ camera_on: cameraOn })
             })
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
                 alert(data.message);
-                if (cameraOn) {
-                    document.getElementById("videoFeed").src = "/video_feed";
-                    document.getElementById("videoFeed").style.display = "block";
-                } else {
-                    document.getElementById("videoFeed").style.display = "none";
-                    document.getElementById("videoFeed").src = "";
-                }
+                const videoFeed = document.getElementById("videoFeed");
+                videoFeed.style.display = cameraOn ? "block" : "none";
+                videoFeed.src = cameraOn ? "/video_feed" : "";
             })
-            .catch(error => console.error("Error toggling camera:", error));
+            .catch(error => {
+                console.error("Camera toggle failed:", error);
+                alert("Error toggling camera.");
+            });
         });
 
-
+        // 🌗 Toggle Light/Dark Mode
         function toggleMode() {
             document.body.classList.toggle("dark-mode");
-            let modeBtn = document.querySelector(".toggle-mode");
+            const modeBtn = document.querySelector(".toggle-mode");
             modeBtn.textContent = document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
         }
     </script>

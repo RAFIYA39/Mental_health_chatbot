@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loading...</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background-color: #eaf4ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-family: 'Nunito', sans-serif;
+      color: #2c3e50;
+    }
+
+    .logo-img {
+      width: auto;
+      max-width: 90%;
+      height: auto;
+    }
+
+    .spinner {
+    margin-top: 1rem;
+    border: 6px solid #e3e3e3;
+    border-top: 6px solid #2c3e50;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1.5s infinite; /* 👈 slow, with "steps" */
+   }
+
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='images/mb.jpg.png') }}" alt="MindCare Logo" class="logo-img" />
+
+  <div class="spinner"></div>
+
+  <script>
+     const FIRSTPAGE_URL="{{url_for('first_page')}}"
+    setTimeout(() => window.location.href = FIRSTPAGE_URL , 2000); // 2 seconds
+  </script>
+</body>
+</html>
+

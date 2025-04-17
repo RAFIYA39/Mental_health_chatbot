@@ -15,6 +15,11 @@ rules:
     steps:
       - intent: thanks
       - action: utter_thanks
+  - rule: User feels depressed
+    steps:
+      - intent: depressed
+      - action: utter_depressed
+
 
   - rule: Default fallback to AI-generated response
     steps:

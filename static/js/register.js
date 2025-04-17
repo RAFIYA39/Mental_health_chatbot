@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.message) {
                     status.textContent = data.message;
                     status.style.color = "green";
-                    setTimeout(() => window.location.href = "login.html", 2000);
+                    setTimeout(() => window.location.href = "/loginpage", 2000);
                 } else {
                     status.textContent = data.error || "Registration failed.";
                     status.style.color = "red";

@@ -111,6 +111,7 @@ class ActionHandleCriticalEmotions(Action):
 
         return []
 
+
 class ActionDetectFacialEmotion(Action):
     def name(self):
         return "action_detect_facial_emotion"
@@ -157,3 +158,4 @@ class ActionDetectFacialEmotion(Action):
 
         dispatcher.utter_message("Emotion detection stopped.")
         return []
+    

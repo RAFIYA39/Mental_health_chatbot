@@ -7,3 +7,5 @@ backend/tmp/
 backend/temp_audio.webm
 backend/converted_audio.wav
 actions/__pycache__/
+converted_audio.wav
+temp_audio.webm
