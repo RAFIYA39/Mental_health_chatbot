@@ -100,9 +100,9 @@ This chatbot is not a replacement for professional help.
 
 # Created By
 
-Rafiya Iqbal
-Sanjana Shaji
-Shahanaz Fathima
+Rafiya Iqbal,
+Sanjana Shaji,
+Shahanaz Fathima,
 Raniya Iqbal
 
 
