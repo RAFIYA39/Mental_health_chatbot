@@ -48,7 +48,7 @@ A compassionate, AI-powered mental health support system built to assist users i
 
 # Project Structure
 
-```
+
 Mental_health_chatbot/
 ├── backend/
 │   ├── app.py                # Flask app logic
