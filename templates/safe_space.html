@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Safe Space Drawing Board</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    canvas {
+      border: 2px solid #cbd5e0;
+      background-color: white;
+      touch-action: none;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-purple-200 min-h-screen flex">
+
+  <!-- Vertical Toolbar -->
+  <div class="w-20 bg-white shadow-md flex flex-col items-center py-4 space-y-4">
+    <button onclick="setTool('pen')" class="tool-btn" title="Pen">✏️</button>
+    <button onclick="setTool('highlighter')" class="tool-btn" title="Highlighter">🖍️</button>
+    <button onclick="setTool('marker')" class="tool-btn" title="Marker">🖊️</button>
+    <button onclick="setTool('eraser')" class="tool-btn" title="Eraser">🧽</button>
+    <input type="color" id="colorPicker" title="Choose Color" class="w-8 h-8 cursor-pointer" onchange="setColor(this.value)">
+    <button onclick="clearCanvas()" class="tool-btn text-red-500" title="Clear Canvas">🗑️</button>
+    <a href="/selfcare" class="mt-4 text-xs text-blue-600 hover:underline">← Back</a>
+  </div>
+   <!-- Page Heading -->
+   <div class="absolute top-4 left-1/2 transform -translate-x-1/2 text-center">
+    <h1 class="text-3xl md:text-4xl font-bold text-indigo-700">🎨 Your Safe Space</h1>
+    <p class="text-gray-600 mt-1">Express freely, no judgment—just you and your canvas.</p>
+  </div>
+  <!-- Drawing Board Section -->
+  <div class="flex-grow flex justify-center items-center p-6">
+    <canvas id="drawingCanvas" width="1000" height="600"></canvas>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("drawingCanvas");
+    const ctx = canvas.getContext("2d");
+    let isDrawing = false;
+    let currentTool = "pen";
+    let currentColor = "#000000";
+    let lastX = 0, lastY = 0;
+
+    function setTool(tool) {
+      currentTool = tool;
+      if (tool === "eraser") {
+        ctx.globalAlpha = 1.0;
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 20;
+      } else if (tool === "highlighter") {
+        ctx.globalAlpha = 0.3;
+        ctx.lineWidth = 25;
+        ctx.strokeStyle = currentColor;
+      } else if (tool === "marker") {
+        ctx.globalAlpha = 0.8;
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = currentColor;
+      } else {
+        ctx.globalAlpha = 1.0;
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = currentColor;
+      }
+    }
+
+    function setColor(color) {
+      currentColor = color;
+      if (currentTool !== "eraser") {
+        ctx.strokeStyle = color;
+      }
+    }
+
+    canvas.addEventListener("mousedown", (e) => {
+      isDrawing = true;
+      [lastX, lastY] = [e.offsetX, e.offsetY];
+    });
+
+    canvas.addEventListener("mouseup", () => isDrawing = false);
+    canvas.addEventListener("mouseout", () => isDrawing = false);
+
+    canvas.addEventListener("mousemove", (e) => {
+      if (!isDrawing) return;
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      [lastX, lastY] = [e.offsetX, e.offsetY];
+    });
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // Mobile/touch support
+    canvas.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      lastX = touch.clientX - rect.left;
+      lastY = touch.clientY - rect.top;
+      isDrawing = true;
+    });
+
+    canvas.addEventListener("touchmove", (e) => {
+      e.preventDefault();
+      if (!isDrawing) return;
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const x = touch.clientX - rect.left;
+      const y = touch.clientY - rect.top;
+
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+
+      lastX = x;
+      lastY = y;
+    });
+
+    canvas.addEventListener("touchend", () => isDrawing = false);
+
+    // Default tool
+    setTool("pen");
+  </script>
+
+</body>
+</html>

@@ -13,6 +13,7 @@ import time
 import requests
 from textblob import TextBlob
 from datetime import datetime
+from collections import Counter
 
 
 # --- Flask Setup ---
@@ -97,6 +98,13 @@ def chatbot():
 @app.route("/selfcare")
 def selfcare():
     return render_template("selfcare.html")
+@app.route("/safe-space")
+def safe_space():
+    return render_template("safe_space.html")
+
+@app.route("/future-self")
+def future_self():
+    return render_template("future_self.html")
 
 # --- Register User ---
 @app.route("/register", methods=["POST"])
@@ -165,13 +173,43 @@ def get_mood(user_message, polarity):
     else:
         # fallback to polarity-based
         return "positive" if polarity > 0.2 else "negative" if polarity < -0.2 else "neutral"
+SOS_TRIGGERS = ["kill","end myself","suicide","helpme", "sos", "emergency", "i need help", "need help", "i’m in danger", "save me"]
 
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.json
     user_message = data.get("message")
-    username = data.get("username", "guest")  # Add username from frontend later
-    
+    username = data.get("username", "guest")
+    normalized_message = user_message.lower().strip()
+
+
+    if any(trigger in normalized_message for trigger in SOS_TRIGGERS):
+        # Save SOS in mood_logs
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            timestamp = datetime.now().strftime("%H:%M:%S")
+            date = datetime.now().strftime("%Y-%m-%d")
+            cursor.execute("""
+                INSERT INTO mood_logs (username, mood, timestamp, date, polarity)
+                VALUES (?, ?, ?, ?, ?)
+            """, (username, "sos", timestamp, date, -1.0))
+            conn.commit()
+
+        # Log the alert
+        with open("sos_alerts.log", "a") as f:
+            f.write(f"SOS triggered by {username} at {timestamp} on {date}\n")
+
+        # Serious response
+        return jsonify({
+            "response": (
+                "🔴 I understand that you're in distress. You're not alone.\n"
+                "Please reach out immediately to the **KIRAN Mental Health Helpline: 1800-599-0019** 📞\n"
+                "They are available 24/7 and ready to help you, and so am I. 💙"
+            )
+        })
+
+    # ...continue with mood detection and normal chat flow here...
+
     # Detect sentiment/mood
     blob = TextBlob(user_message)
     polarity = blob.sentiment.polarity
@@ -214,11 +252,46 @@ def chat():
 @app.route("/progress")
 def progress():
     return render_template("progress.html")
+@app.route('/get_mood_chart_data')
+def get_mood_chart_data():
+    username = request.args.get("username")
+    range_type = request.args.get("range", "daily")
 
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT mood,date,timestamp FROM mood_logs
+            WHERE username = ?
+        """, (username,))
+        rows = cursor.fetchall()
+
+    if not rows:
+        return jsonify([])
+
+    grouped_data = {}
+    for mood,date,ts in rows:
+        datetime_str = f"{date} {ts}"
+        dt = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+
+        if range_type == 'weekly':
+            key = f"{dt.year}-W{dt.isocalendar().week}"
+        elif range_type == 'monthly':
+            key = f"{dt.year}-{dt.month:02}"
+        else:
+            key = dt.date().isoformat()
+
+        grouped_data.setdefault(key, []).append(mood)
+
+    result = []
+    for period, moods in grouped_data.items():
+        most_common_mood = Counter(moods).most_common(1)[0][0]
+        result.append({"date": period, "mood": most_common_mood})
+
+    return jsonify(result)
 @app.route("/get_mood_data", methods=["GET"])
 def get_mood_data():
     username = request.args.get("username")
-
+    
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("""
@@ -229,10 +302,11 @@ def get_mood_data():
         rows = cursor.fetchall()
 
     data = []
-    mood_counts = {"positive": 0, "neutral": 0, "negative": 0}
+    mood_counts = {"positive": 0, "neutral": 0, "negative": 0,"sos":0}
     for row in rows:
         mood = row["mood"]
-        mood_counts[mood] += 1
+        if mood in mood_counts:
+            mood_counts[mood] += 1
         data.append({
             "mood": mood,
             "datetime": f"{row['date']} {row['timestamp']}"

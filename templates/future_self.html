@@ -1,0 +1,58 @@
+<!-- templates/future_self.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Message to Future Self</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-bl from-purple-100 to-blue-200 min-h-screen flex flex-col items-center justify-center p-6 font-sans">
+
+  <h1 class="text-4xl font-bold text-indigo-700 mb-4">💌 Message to Future You</h1>
+  <p class="text-lg text-gray-700 mb-8 text-center max-w-2xl">
+    Take a moment. Reflect on how you're feeling, your hopes, or what you want your future self to remember. This is just for you. 🌱
+  </p>
+
+  <form id="futureForm" class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+    <label class="block text-gray-700 text-lg font-semibold mb-2">Write your message:</label>
+    <textarea id="futureMessage" rows="8" class="w-full p-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-300 mb-4" placeholder="Dear future me..."></textarea>
+
+    <label class="block text-gray-600 mb-2">Optional: Choose a future date to read this again</label>
+    <input type="date" id="futureDate" class="mb-6 w-full border p-2 rounded">
+
+    <div class="flex justify-between">
+      <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded">Save</button>
+      <button type="button" onclick="clearMessage()" class="bg-gray-300 hover:bg-gray-400 px-6 py-2 rounded">Clear</button>
+    </div>
+  </form>
+
+  <div id="confirmation" class="mt-6 hidden bg-green-100 border border-green-400 text-green-700 p-4 rounded max-w-xl text-center">
+    🌟 Your message to future self is saved. It's a beautiful act of self-care. 💖
+  </div>
+
+  <script>
+    const form = document.getElementById('futureForm');
+    const messageBox = document.getElementById('futureMessage');
+    const confirmation = document.getElementById('confirmation');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const message = messageBox.value.trim();
+      if (message === "") {
+        alert("Please write something to your future self.");
+        return;
+      }
+      localStorage.setItem("future_self_message", message);
+      localStorage.setItem("future_self_date", document.getElementById("futureDate").value);
+      messageBox.value = "";
+      confirmation.classList.remove("hidden");
+    });
+
+    function clearMessage() {
+      messageBox.value = "";
+      confirmation.classList.add("hidden");
+    }
+  </script>
+
+</body>
+</html>

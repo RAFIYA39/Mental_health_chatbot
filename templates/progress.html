@@ -1,73 +1,165 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Mood Progress</title>
+    <meta charset="UTF-8">
+    <title>Mood Progress Tracker</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h2>Mood Distribution</h2>
-    <h3 id="moodSummary"></h3>
-    <p id="moodMessage" style="font-style: italic;"></p> <!-- 💡 Motivational message -->
+<body class="bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 min-h-screen font-sans p-6">
 
-    <canvas id="moodBarChart" width="600" height="400"></canvas>
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-8 space-y-6">
+        <h2 class="text-3xl font-bold text-center text-indigo-700">Mood Progress Tracker</h2>
+
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <div>
+                <label for="chartType" class="block text-sm font-medium text-gray-700">View:</label>
+                <select id="chartType" class="mt-1 block w-48 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="bar">Mood Frequency</option>
+                    <option value="line">Mood Over Time</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="rangeSelect" class="block text-sm font-medium text-gray-700">Time Range:</label>
+                <select id="rangeSelect" class="mt-1 block w-48 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="text-center space-y-2">
+            <h3 id="moodSummary" class="text-xl font-semibold text-gray-800"></h3>
+            <p id="moodMessage" class="italic text-gray-600"></p>
+        </div>
+
+        <div class="bg-gray-100 p-4 rounded-lg">
+            <canvas id="moodChart" width="600" height="400"></canvas>
+        </div>
+    </div>
 
     <script>
         const username = localStorage.getItem("username") || "guest";
+        const chartTypeSelector = document.getElementById("chartType");
+        const rangeSelector = document.getElementById("rangeSelect");
+        const ctx = document.getElementById("moodChart").getContext("2d");
+        let chart;
 
-        fetch(`/get_mood_data?username=${username}`)
-            .then(response => response.json())
-            .then(result => {
-                const data = result.moods;
-                const summary = result.summary;
+        const moodMessages = {
+            positive: "You've been feeling mostly positive 😊",
+            neutral: "You’ve been mostly neutral 😌",
+            negative: "You've been going through a tough time 😔"
+        };
+        const motivationalMessages = {
+            positive: "Keep spreading good vibes! 🌈",
+            neutral: "Balance is beautiful. 🌿",
+            negative: "Hang in there 💪 Better days are coming."
+        };
 
-                const maxMood = Object.keys(summary).reduce((a, b) => summary[a] > summary[b] ? a : b);
+        function renderBarChart(summary) {
+            const maxMood = Object.keys(summary).reduce((a, b) => summary[a] > summary[b] ? a : b);
+            document.getElementById("moodSummary").textContent = moodMessages[maxMood];
+            document.getElementById("moodMessage").textContent = motivationalMessages[maxMood];
 
-                // 🌟 Summary Text
-                const moodMessages = {
-                    positive: "You've been feeling mostly positive this week 😊",
-                    neutral: "You’ve been mostly neutral – maybe it’s been a calm week 😌",
-                    negative: "Looks like you've been going through a tough week 😔"
-                };
-                document.getElementById("moodSummary").textContent = moodMessages[maxMood];
-
-                // 💬 Motivational / supportive messages
-                const motivationalMessages = {
-                    positive: "Keep spreading the good vibes! 🌈 You're doing amazing.",
-                    neutral: "Balance is beautiful. Keep going one step at a time 🌿",
-                    negative: "Hang in there 💪 You're stronger than you think. Brighter days are ahead!"
-                };
-                document.getElementById("moodMessage").textContent = motivationalMessages[maxMood];
-
-                // 📊 Bar Chart
-                const ctxBar = document.getElementById('moodBarChart').getContext('2d');
-                new Chart(ctxBar, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Positive', 'Neutral', 'Negative'],
-                        datasets: [{
-                            label: 'Mood Frequency',
-                            data: [summary.positive, summary.neutral, summary.negative],
-                            backgroundColor: ['#4CAF50', '#FFC107', '#F44336']
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Number of Entries'
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
+            if (chart) chart.destroy();
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Positive', 'Neutral', 'Negative'],
+                    datasets: [{
+                        label: 'Mood Frequency',
+                        data: [summary.positive, summary.neutral, summary.negative],
+                        backgroundColor: ['#4CAF50', '#FFC107', '#F44336']
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Entries'
                             }
                         }
+                    },
+                    plugins: {
+                        legend: { display: false }
                     }
-                });
+                }
             });
+        }
+
+        function renderLineChart(data) {
+            const labels = data.map(entry => entry.date);
+            const moods = data.map(entry => {
+                if (entry.mood === 'positive') return 3;
+                if (entry.mood === 'neutral') return 2;
+                return 1;
+            });
+
+            if (chart) chart.destroy();
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Mood Over Time',
+                        data: moods,
+                        fill: false,
+                        borderColor: '#42A5F5',
+                        tension: 0.3,
+                        pointBackgroundColor: moods.map(val =>
+                            val === 3 ? '#4CAF50' : val === 2 ? '#FFC107' : '#F44336'
+                        )
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    if (value === 3) return 'Positive';
+                                    if (value === 2) return 'Neutral';
+                                    if (value === 1) return 'Negative';
+                                    return '';
+                                },
+                                stepSize: 1
+                            },
+                            title: {
+                                display: true,
+                                text: 'Mood'
+                            },
+                            min: 1,
+                            max: 3
+                        }
+                    }
+                }
+            });
+        }
+
+        function loadChart() {
+            const chartType = chartTypeSelector.value;
+            const range = rangeSelector.value;
+
+            if (chartType === 'bar') {
+                fetch(`/get_mood_data?username=${username}`)
+                    .then(res => res.json())
+                    .then(result => renderBarChart(result.summary));
+            } else {
+                fetch(`/get_mood_chart_data?username=${username}&range=${range}`)
+                    .then(res => res.json())
+                    .then(data => renderLineChart(data));
+            }
+        }
+
+        chartTypeSelector.addEventListener("change", loadChart);
+        rangeSelector.addEventListener("change", loadChart);
+
+        // Initial load
+        loadChart();
     </script>
 </body>
 </html>

@@ -38,10 +38,11 @@
     <!-- Prevent back navigation -->
     <script>
         // Clear history state to prevent going back
-        history.pushState(null, null, location.href);
-        window.onpopstate = function () {
-            history.go(1);
-        };
+        function handleLogout(event){
+        event.preventDefault();
+        window.location.replace("/hm")
+       }
+        
     </script>
 </body>
 </html>
