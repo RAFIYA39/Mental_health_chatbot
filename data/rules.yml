@@ -25,4 +25,8 @@ rules:
     steps:
       - intent: nlu_fallback
       - action: action_generate_empathetic_response
+  - rule: Respond to detected camera emotion
+    steps:
+      - intent: not-talking
+      - action: action_generate_empathetic_response
 

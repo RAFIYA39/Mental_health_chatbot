@@ -1,0 +1,74 @@
+[
+  {
+    "text": "You can't help me",
+    "intent": "understand",
+    "intent_prediction": {
+      "name": "help",
+      "confidence": 0.2391069084405899
+    }
+  },
+  {
+    "text": "I hate you",
+    "intent": "hate-you",
+    "intent_prediction": {
+      "name": "hate-me",
+      "confidence": 0.5558412075042725
+    }
+  },
+  {
+    "text": "I don't like you",
+    "intent": "hate-you",
+    "intent_prediction": {
+      "name": "hate-me",
+      "confidence": 0.49171075224876404
+    }
+  },
+  {
+    "text": "I don't have any friends",
+    "intent": "friends",
+    "intent_prediction": {
+      "name": "sad",
+      "confidence": 0.31994929909706116
+    }
+  },
+  {
+    "text": "difference between sadness and depression",
+    "intent": "fact-32",
+    "intent_prediction": {
+      "name": "hate-you",
+      "confidence": 0.2561904191970825
+    }
+  },
+  {
+    "text": "happy",
+    "intent": "not-talking",
+    "intent_prediction": {
+      "name": "happy",
+      "confidence": 0.8107321262359619
+    }
+  },
+  {
+    "text": "sad",
+    "intent": "not-talking",
+    "intent_prediction": {
+      "name": "sad",
+      "confidence": 0.7363426685333252
+    }
+  },
+  {
+    "text": "angry",
+    "intent": "not-talking",
+    "intent_prediction": {
+      "name": "casual",
+      "confidence": 0.6267775297164917
+    }
+  },
+  {
+    "text": "neutral",
+    "intent": "not-talking",
+    "intent_prediction": {
+      "name": "fact-26",
+      "confidence": 0.0819573774933815
+    }
+  }
+]

@@ -396,3 +396,9 @@ nlu:
   examples: |
     - What's the difference between sadness and depression?
     - difference between sadness and depression
+- intent: not-talking
+  examples: |
+    - [happy](emotion)
+    - [sad](emotion)
+    - [angry](emotion)
+    - [neutral](emotion)
